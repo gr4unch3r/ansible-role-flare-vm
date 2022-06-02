@@ -1,0 +1,14 @@
+galaxy_info:
+  role_name: flare_vm
+  author: gr4unch3r
+  description: Install FLARE VM
+  license: MIT
+  min_ansible_version: '2.1'
+  platforms:
+    - name: Windows
+      versions:
+        - all
+  galaxy_tags:
+    - windows
+    - security
+dependencies: []

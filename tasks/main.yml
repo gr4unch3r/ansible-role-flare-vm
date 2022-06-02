@@ -1,0 +1,68 @@
+---
+- name: Disabling Defender real-time protection
+  ansible.windows.win_regedit:
+    path: HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection
+    name: DisableRealtimeMonitoring
+    data: 1
+    type: dword
+
+- name: Disabling Defender cloud-delivered protection
+  ansible.windows.win_regedit:
+    path: HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet
+    name: SpynetReporting
+    data: 0
+    type: dword
+
+- name: Disabling Defender automatic sample submission
+  ansible.windows.win_regedit:
+    path: HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet
+    name: SubmitSamplesConsent
+    data: 2
+    type: dword
+
+- name: Adding C:\ drive to Defender exclusion list
+  ansible.windows.win_shell: Add-MpPreference -ExclusionPath "{{ system_drive }}" -Force
+
+- name: Downloading FLARE VM installer
+  ansible.windows.win_get_url:
+    url: "{{ flare_installer }}"
+    dest: C:\Windows\Temp\install.ps1
+
+- name: Unblocking FLARE VM installer file
+  ansible.windows.win_shell: Unblock-File .\install.ps1
+  args:
+    chdir: C:\Windows\Temp
+
+- name: Setting PowerShell exececution policy to "Unrestricted"
+  ansible.windows.win_shell: Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope LocalMachine -Force
+
+- name: Installing FLARE VM
+  ansible.windows.win_shell: .\install.ps1 -password {{ ansible_password }}
+  args:
+    chdir: C:\Windows\Temp
+
+- name: Ensuring background is set
+  ansible.windows.win_regedit:
+    path: HKCU:\Control Panel\Desktop
+    name: Wallpaper
+    data: "{{ background file }}"
+    type: string
+
+- name: Setting internal network gateway for network traffic capture
+  ansible.windows.win_shell: Remove-NetIPAddress 192.168.56.103 -Confirm:$false
+
+- name: Setting internal network gateway for network traffic capture
+  ansible.windows.win_shell: New-NetIPAddress -InterfaceAlias 'Ethernet 2' -IPAddress '192.168.56.103' -PrefixLength 24 -DefaultGateway '192.168.56.102'
+
+- name: Setting DNS for network traffic capture
+  ansible.windows.win_dns_client:
+    adapter_names: 'Ethernet 2'
+    dns_servers: 192.168.56.102
+
+- name: Removing FLARE VM installer
+  ansible.windows.win_file:
+    path: C:\Windows\Temp\install.ps1
+    state: absent
+
+- name: Rebooting machine to make changes take effect
+  ansible.windows.win_reboot:

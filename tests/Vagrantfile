@@ -1,0 +1,25 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+    config.vm.box = "gr4unch3r/windows-10"
+    config.vm.box_version = "10.0.17763"
+    config.vm.boot_timeout = 1200
+    config.vm.communicator = "winrm"
+    config.winrm.transport = :plaintext
+    config.winrm.basic_auth_only = true
+    config.winrm.timeout = 1200
+    config.winrm.retry_limit = 20
+    config.vm.network :private_network, ip: "192.168.56.103", gateway: "192.168.56.102", dns: "192.168.56.102"
+    config.vm.provider :virtualbox do |v|
+      v.gui = false
+      v.check_guest_additions = false
+      v.memory = 10035
+      v.cpus = 3
+    end
+    config.vm.provision "ansible" do |ansible|
+      ansible.playbook = "playbook.yml"
+      ansible.galaxy_role_file = "requirements.yml"
+      ansible.inventory_path = "inventory"
+    end
+  end

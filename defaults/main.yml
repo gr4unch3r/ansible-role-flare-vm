@@ -1,0 +1,4 @@
+---
+system_drive: C:\
+flare_installer: https://raw.githubusercontent.com/mandiant/flare-vm/master/install.ps1
+background_file: C:\ProgramData\chocolatey\lib\flarevm.win10.config.flare\tools\flarevm.png
