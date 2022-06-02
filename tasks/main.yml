@@ -45,7 +45,7 @@
   ansible.windows.win_regedit:
     path: HKCU:\Control Panel\Desktop
     name: Wallpaper
-    data: "{{ background file }}"
+    data: "{{ background_file }}"
     type: string
 
 - name: Setting internal network gateway for network traffic capture
