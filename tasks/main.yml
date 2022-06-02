@@ -34,10 +34,10 @@
     chdir: C:\Windows\Temp
 
 - name: Setting PowerShell exececution policy to "Unrestricted"
-  ansible.windows.win_shell: Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope LocalMachine -Force
+  ansible.windows.win_shell: Set-ExecutionPolicy Unrestricted -Force
 
 - name: Installing FLARE VM
-  ansible.windows.win_shell: .\install.ps1
+  ansible.windows.win_shell: .\install.ps1 -password {{ flare_passwd }}
   args:
     chdir: C:\Windows\Temp
 

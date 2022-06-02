@@ -9,6 +9,10 @@ Ansible role to install [FLARE VM](https://github.com/mandiant/flare-vm) Windows
 - Windows 10 Version 1809 VM configured for remoting with Ansible (e.g. [gr4unch3r/windows-10](https://app.vagrantup.com/gr4unch3r/boxes/windows-10/versions/10.0.17763))
 - [ansible.windows](https://galaxy.ansible.com/ansible/windows)
 
+## Role Variables
+
+- `flare_passwd` - User password (Default: 'vagrant')
+
 ## Example Playbook
 
 ```
